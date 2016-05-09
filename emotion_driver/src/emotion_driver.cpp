@@ -56,27 +56,27 @@ int main(int argc, char** argv)
 	ros::Publisher vel_pub_ = nh_.advertise<geometry_msgs::Twist>("emotion/command_velocity", 1);
 	ros::Publisher emotion_info_pub_ = nh_.advertise<std_msgs::String>("emotion/info", 1000);
 	ros::Subscriber segbot_teleop_sub_ = nh_.subscribe("cmd_vel", 1000, segbot_teleop_handler);
-
-    // Seed random number generator
-    srand(static_cast<unsigned>(time(0)));
+	
+	// Seed random number generator
+	srand(static_cast<unsigned>(time(0)));
 		
-    // Initialize variables to default values
-    current_movement = STOP;
-    current_emotion = NEUTRAL;
-    total_num_commands = 0;
-    num_yes = 0;
-    num_no = 0;
-    current_mood_level = 0.0;
-    diff_percentage = 0.0;
-    desire_level = 0.0;
-    happy_threshold = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(1.1-0.1))); // 0.1 to 1.1, inclusive
-    sad_threshold = -(static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(1.1-0.1)))); // 0.1 to -1.1, inclusive
-    angry_threshold = -(static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(2.1-(0.1-sad_threshold))))); // (sad_threshold - 0.1) to -2.1, inclusive
- 
-	std_msgs::String msg;
+    	// Initialize variables to default values
+    	current_movement = STOP;
+	current_emotion = NEUTRAL;
+    	total_num_commands = 0;
+    	num_yes = 0;
+    	num_no = 0;
+    	current_mood_level = 0.0;
+    	diff_percentage = 0.0;
+    	desire_level = 0.0;
+    	happy_threshold = static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(1.1-0.1))); // 0.1 to 1.1, inclusive
+    	sad_threshold = -(static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(1.1-0.1)))); // 0.1 to -1.1, inclusive
+    	angry_threshold = -(static_cast<float>(rand())/(static_cast<float>(RAND_MAX/(2.1-(0.1-sad_threshold))))); // (sad_threshold - 0.1) to -2.1, inclusive
+    	
+    	std_msgs::String msg;
 	std::ostringstream oss;
-    bool isFirst = true;
-    while (nh_.ok())
+    	bool isFirst = true;
+	while (nh_.ok())
 	{	
 		if (isFirst)
 		{
@@ -131,73 +131,73 @@ int main(int argc, char** argv)
 
 void segbot_teleop_handler(const geometry_msgs::Twist& msg)
 {
-    velocity.linear.x = msg.linear.x;
-    velocity.angular.z = msg.angular.z;
-    isMessagedReceived = true;
+	velocity.linear.x = msg.linear.x;
+    	velocity.angular.z = msg.angular.z;
+	isMessagedReceived = true;
 }
 
 float getNextCommand()
 {
-    total_num_commands++;
-    int val = rand() % 4; // range 0 to 3
-    desire_level = static_cast<float>(rand())/static_cast<float>(RAND_MAX);
+	total_num_commands++;
+    	int val = rand() % 4; // range 0 to 3
+    	desire_level = static_cast<float>(rand())/static_cast<float>(RAND_MAX);
     
-    if (val == MOVE_FORWARD)
-    {
-        ROS_INFO("Move forward.");
-        current_movement = MOVE_FORWARD;
-    }
-    else if (val == TURN_LEFT)
-    {
-        ROS_INFO("Turn left.");
-        current_movement = TURN_LEFT;
-    }
-    else if (val == TURN_RIGHT)
-    {
-        ROS_INFO("Turn right.");
-        current_movement = TURN_RIGHT;
-    }
-    else if (val == MOVE_BACKWARD)
-    {
-        ROS_INFO("Move backward.");
-        current_movement = MOVE_BACKWARD;
-    }
+    	if (val == MOVE_FORWARD)
+    	{
+    		ROS_INFO("Move forward.");
+        	current_movement = MOVE_FORWARD;
+    	}
+    	else if (val == TURN_LEFT)
+    	{
+		ROS_INFO("Turn left.");
+        	current_movement = TURN_LEFT;
+    	}
+    	else if (val == TURN_RIGHT)
+    	{
+        	ROS_INFO("Turn right.");
+        	current_movement = TURN_RIGHT;
+    	}
+    	else if (val == MOVE_BACKWARD)
+    	{
+        	ROS_INFO("Move backward.");
+        	current_movement = MOVE_BACKWARD;
+    	}
     
-    return desire_level;
+    	return desire_level;
 }
 
 bool checkResponse()
 {
-    if (current_movement == STOP && (velocity.linear.x != 0.0 || velocity.angular.z != 0.0))
-    {
-        num_no++;
-        return isCommandFollowed = false;
-    }
-    else if (current_movement == MOVE_FORWARD && (velocity.linear.x <= 0.0 || velocity.angular.z != 0.0))
-    {
-        num_no++;
-        return isCommandFollowed = false;
-    }
-    else if (current_movement == TURN_LEFT && (velocity.linear.x != 0.0 || velocity.angular.z >= 0.0))
-    {
-        num_no++;
-        return isCommandFollowed = false;
-    }
-    else if (current_movement == TURN_RIGHT && (velocity.linear.x != 0.0 || velocity.angular.z <= 0.0))
-    {
-        num_no++;
-        return isCommandFollowed = false;
-    }
-    else if (current_movement == MOVE_BACKWARD && (velocity.linear.x >= 0.0 || velocity.angular.z != 0.0))
-    {
-        num_no++;
-        return isCommandFollowed = false;
-    }
-    else
-    {
+	if (current_movement == STOP && (velocity.linear.x != 0.0 || velocity.angular.z != 0.0))
+    	{
+        	num_no++;
+        	return isCommandFollowed = false;
+    	}
+    	else if (current_movement == MOVE_FORWARD && (velocity.linear.x <= 0.0 || velocity.angular.z != 0.0))
+	{
+        	num_no++;
+        	return isCommandFollowed = false;
+    	}
+	else if (current_movement == TURN_LEFT && (velocity.linear.x != 0.0 || velocity.angular.z >= 0.0))
+    	{
+        	num_no++;
+        	return isCommandFollowed = false;
+    	}
+    	else if (current_movement == TURN_RIGHT && (velocity.linear.x != 0.0 || velocity.angular.z <= 0.0))
+    	{
+        	num_no++;
+        	return isCommandFollowed = false;
+    	}
+    	else if (current_movement == MOVE_BACKWARD && (velocity.linear.x >= 0.0 || velocity.angular.z != 0.0))
+    	{
+        	num_no++;
+        	return isCommandFollowed = false;
+    	}
+    	else
+    	{
 		num_yes++;
 		return isCommandFollowed = true;
-	}
+    	}
 }
 
 Emotion determineMoodLevel(bool isCommandFollowed)
@@ -235,24 +235,24 @@ Emotion determineMoodLevel(bool isCommandFollowed)
 
 void doBehavior(Emotion emotion)
 {
-    geometry_msgs::Twist vel_msg;
-    if (emotion == NEUTRAL)
-    {
+	geometry_msgs::Twist vel_msg;
+    	if (emotion == NEUTRAL)
+    	{
 		ROS_INFO("Meh..");
-	}
-    else if (emotion == HAPPY) {
-        ROS_INFO("I am happy!");
-    }
-    else if (emotion == SAD) {
-        ROS_INFO("I am sad...");
-    }
-    else if (emotion == ANGRY) {
-        ROS_INFO("I AM ANGRY!!!");
-    }
+    	}
+    	else if (emotion == HAPPY) {
+        	ROS_INFO("I am happy!");
+    	}
+    	else if (emotion == SAD) {
+        	ROS_INFO("I am sad...");
+    	}
+    	else if (emotion == ANGRY) {
+        	ROS_INFO("I AM ANGRY!!!");
+    	}
 }
 
 void resetVelocity()
 {
-    velocity.linear.x = 0.0;
-    velocity.angular.z = 0.0;
+	velocity.linear.x = 0.0;
+    	velocity.angular.z = 0.0;
 }
