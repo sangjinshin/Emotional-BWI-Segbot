@@ -1,1 +1,1 @@
-# Emotional-BWI-Segbot
+# Emotional BWI Segbot
