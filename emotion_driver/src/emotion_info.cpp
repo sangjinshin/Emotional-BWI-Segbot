@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 	
 	ros::NodeHandle nh_;
 	
-	ros::Subscriber emotion_info_sub_ = nh_.subscribe("emotion/info", 1000, emotion_info_callback);
+	ros::Subscriber emotion_info_sub_ = nh_.subscribe("emotion/info", 1, emotion_info_callback);
 	
 	ros::spin();
 	
