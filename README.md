@@ -6,7 +6,7 @@ emotion_driver
 ROS Nodes: <br/>
 emotion_driver <br/>
 emotion_info <br/>
-emotion_gui <br/>
+emotion_gui
 
 #To Run: <br/>
 0) Install BWI code base <br/>
