@@ -133,7 +133,7 @@ include_directories(
 # add_executable(emotion_driver_node src/emotion_driver_node.cpp)
 add_executable(emotion_driver src/emotion_driver.cpp)
 add_executable(emotion_info src/emotion_info.cpp)
-add_executable(emotion_gui src/emotion_gui.cpp)
+add_executable(emotion_face src/emotion_face.cpp)
 
 
 ## Add cmake target dependencies of the executable
@@ -146,7 +146,7 @@ add_executable(emotion_gui src/emotion_gui.cpp)
 # )
 target_link_libraries(emotion_driver ${catkin_LIBRARIES})
 target_link_libraries(emotion_info ${catkin_LIBRARIES})
-target_link_libraries(emotion_gui ${catkin_LIBRARIES})
+target_link_libraries(emotion_face ${catkin_LIBRARIES})
 
 #############
 ## Install ##

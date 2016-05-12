@@ -49,7 +49,7 @@ float getNextCommand();
 bool checkResponse();
 Emotion determineMoodLevel(bool isCommandFollowed);
 void resetVelocity();
-void publish_emotion_gui(ros::Publisher emotion_gui_pub_, Emotion current_emotion);
+void publish_emotion_face(ros::Publisher emotion_face_pub_, Emotion current_emotion);
 void publish_emotion_info(ros::Publisher emotion_info_pub_);
 
 int main(int argc, char** argv)
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 	// Initialize publishers and subscriber
 	ros::Publisher vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 5);
 	ros::Publisher emotion_info_pub_ = nh_.advertise<std_msgs::String>("emotion/info", 5);
-	ros::Publisher emotion_gui_pub_ = nh_.advertise<std_msgs::String>("emotion/gui", 5);
+	ros::Publisher emotion_face_pub_ = nh_.advertise<std_msgs::String>("emotion/face", 5);
 	ros::Subscriber segbot_teleop_sub_ = nh_.subscribe("cmd_vel", 5, segbot_teleop_handler);
 
     // Seed random number generator
@@ -83,7 +83,7 @@ int main(int argc, char** argv)
     // ---------------START---------------
     
     // Robot commands what movement to do next and returns the desire_level of that command
-    publish_emotion_gui(emotion_gui_pub_, current_emotion);
+    publish_emotion_face(emotion_face_pub_, current_emotion);
 	desire_level = getNextCommand();
 	ROS_INFO("Desire Level: [%f]\n", desire_level);
 	
@@ -100,23 +100,12 @@ int main(int argc, char** argv)
 		
 			// Calculates change in mood level and determines the Emotion
 			current_emotion = determineMoodLevel(isCommandFollowed);
-			
-			/*
-			if (current_emotion == SAD) 
-			{
-				geometry_msgs::Twist vel_msg;
-				vel_msg.angular.z = 3.14; // rotate 180 degrees
-				vel_pub_.publish(vel_msg);
-				vel_msg.angular.z = 0.0;
-				vel_pub_.publish(vel_msg);
-			}
-			* */
 		
 			// Publishes information about the current state of robot's emotion
 			publish_emotion_info(emotion_info_pub_);
 			
-			// Publishes gui face of current emotion
-			publish_emotion_gui(emotion_gui_pub_, current_emotion);
+			// Publishes face face of current emotion
+			publish_emotion_face(emotion_face_pub_, current_emotion);
 			
 			// Resets velocity stored
 			resetVelocity();
@@ -260,9 +249,9 @@ void resetVelocity()
     velocity.angular.z = 0.0;
 }
 
-void publish_emotion_gui(ros::Publisher emotion_gui_pub_, Emotion current_emotion)
+void publish_emotion_face(ros::Publisher emotion_face_pub_, Emotion current_emotion)
 {
-	std_msgs::String emotion_gui;
+	std_msgs::String emotion_face;
 	std::ostringstream oss;
 	if (current_emotion == NEUTRAL)
 	{
@@ -389,8 +378,8 @@ void publish_emotion_gui(ros::Publisher emotion_gui_pub_, Emotion current_emotio
 
 	}
 	
-	emotion_gui.data = oss.str();
-	emotion_gui_pub_.publish(emotion_gui);
+	emotion_face.data = oss.str();
+	emotion_face_pub_.publish(emotion_face);
 }
 
 void publish_emotion_info(ros::Publisher emotion_info_pub_)
