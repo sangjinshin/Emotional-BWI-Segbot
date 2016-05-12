@@ -7,7 +7,7 @@ emotion_driver
 ROS Nodes: <br/>
 emotion_driver <br/>
 emotion_info <br/>
-emotion_gui
+emotion_face
 
 Summary: <br/>
 This ROS package implements personality and emotional responses to the BWI Segway Robot.
@@ -29,5 +29,5 @@ rosrun emotion_driver emotion_info
 ```
 4) In a new Terminal window,
 ```
-rosrun emotion_driver emotion_gui
+rosrun emotion_driver emotion_face
 ```
